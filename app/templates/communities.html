@@ -1,0 +1,102 @@
+<!-- inherits the base layout (base.html) for consistent structure throughtout the pages -->
+{% extends "base.html" %}
+
+{% block content %}
+<!-- main container for the communities page -->
+<div class="communities-container">
+    <!-- link to the external css file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/communities.css') }}">
+
+    <!-- drop down menu for choosing a genre -->
+    <div class="search-bar-container">
+        <h2>Communities</h2>
+        <form action="{{ url_for('main.communities') }}" method="GET">
+            <label for="genre" class="search-label">Choose a genre</label>
+            <select name="genre" id="genre" class="search-select">
+                <option value="">-- Select a genre --</option>
+                <option value="fiction">Fiction</option>
+                <option value="non-fiction">Non-Fiction</option>
+                <option value="mystery">Mystery</option>
+                <option value="romance">Romance</option>
+                <option value="science-fiction">Science Fiction</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="biography">Biography</option>
+                <option value="educational">Educational</option>
+                <option value="other">Other</option>
+            </select>
+            <!-- button to submit the genre search form -->
+            <button type="submit" class="search-button">Search</button>
+        </form>
+
+        <!-- link to post creation page -->
+        <a href="{{ url_for('main.create_post') }}" class="create-post-button">Create Post</a>
+    </div>
+
+    <!-- display posts if it exists -->
+    {% if posts %}
+    <div class="community-posts">
+        <!-- loop through each community post -->
+        {% for post in posts %}
+        <div class="community-post">
+            <!-- displaying the title, author, genre, and description -->
+            <div class="post-info">
+                <h3>{{ post.title }}</h3>
+                <p><strong>Author:</strong>
+                    <!-- author name links to their profile --> 
+                    <a href="{{ url_for('main.view_profile', user_id=post.user_id) }}">
+                        {{ post.first_name }} {{ post.last_name }}
+                    </a>
+                </p>
+                <p><strong>Genre:</strong> {{ post.genre }}</p>
+                <p><strong>Description:</strong> {{ post.content }}</p>
+
+                <!-- comments section placed below the description -->
+                <h4>Comments:</h4>
+                <div class="comments-section">
+                    <!-- loop through comments for the current post -->
+                    {% for comment in comments_by_post.get(post.id, []) %}
+                        <div class="comment">
+                            <p>
+                                <!-- commenter name links to their profile -->
+                                <strong>
+                                    <a href="{{ url_for('main.view_profile', user_id=comment.commenter_id) }}">
+                                        {{ comment.commenter_name }}
+                                    </a>
+                                </strong>: {{ comment.content }}
+                            </p>
+                        </div>
+                        <!-- if no comments exist then show message in <p> tag -->
+                    {% else %}
+                        <p>No comments yet.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- if a user is logged in then show comment form -->
+                {% if session.get('user') %}
+                <form action="{{ url_for('main.add_comment', genre=request.args.get('genre')) }}" method="POST" class="comment-form">
+                    <!-- hidden field to associate the comment with the correct post -->
+                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                    <!-- textarea for user to write comment -->
+                    <textarea name="content" rows="2" placeholder="Add a comment..." required></textarea>
+                    <!-- submit button for comment -->
+                    <button type="submit">Comment</button>
+                </form>
+                {% else %}
+                <!-- if user is not logged in then prompt login -->
+                <p><a href="{{ url_for('main.login') }}">Please log in</a> to comment.</p>
+                {% endif %}
+            </div>
+
+            <!-- if post includes an image then display it -->
+            {% if post.image_filename %}
+            <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" alt="{{ post.title }}">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <!-- if no posts match the chosen genre -->
+    {% elif request.args.get('genre') %}
+    <p>No posts found under this genre.</p>
+    {% endif %}
+</div>
+{% endblock %}

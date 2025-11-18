@@ -1,0 +1,161 @@
+<!-- inherits the base layout (base.html) for consistent structure throughtout the pages -->
+{% extends 'base.html' %}
+
+<!-- sets the title for the page -->
+{% block title %}My Account{% endblock %}
+
+<!-- includes custom CSS for the account page -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+{% endblock %}
+
+<!-- main content -->
+{% block content %}
+<section class="account-container">
+    <!-- checks if user is logged in before displaying account details -->
+    {% if logged_in %}
+        <!-- profile header with picture & welcome -->
+        <div class="profile-header">
+            {% if user_profile and user_profile.profile_picture %}
+                <img src="{{ url_for('static', filename='uploads/' + user_profile.profile_picture) }}"
+                     alt="Profile Picture" class="mini-profile-pic">
+            {% endif %}
+            <div>
+                <h2 class="subheading">Welcome, {{ first_name }}</h2>
+                <p>You can manage your book listings, view requests, update your profile and read messages.</p>
+            </div>
+        </div>
+
+        <!-- profile update form -->
+        <h3 class="subheading">Update Your Profile</h3>
+        <form action="{{ url_for('main.update_profile') }}" method="POST" enctype="multipart/form-data" class="profile-form">
+            <label>Username:</label>
+            <input type="text" name="username" placeholder="Your username"
+                   value="{{ user_profile.username if user_profile else '' }}" required><br>
+
+            <label>Bio:</label>
+            <textarea name="bio" placeholder="Tell us about yourself..." rows="4" required>{{ user_profile.bio if user_profile else '' }}</textarea><br>
+
+            <label>Profile Picture:</label>
+            <input type="file" name="profile_picture" accept="image/*"><br>
+
+            <button type="submit">Save</button>
+        </form>
+
+        <!-- book listing form -->
+        <h2 class="subheading">📚 List a Book</h2>
+        <form method="POST" action="{{ url_for('main.list_book') }}" enctype="multipart/form-data" class="listing-form">
+            <input type="text" name="title" placeholder="Book Title" required>
+            <input type="text" name="author" placeholder="Author" required>
+            <!-- genre dropdown -->
+            <select name="genre" required>
+                <option value="">Select a genre</option>
+                <option value="Fiction">Fiction</option>
+                <option value="Non-Fiction">Non-Fiction</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Science Fiction">Science Fiction</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Romance">Romance</option>
+                <option value="Biography">Biography</option>
+                <option value="Self-Help">Educational</option>
+                <option value="Poetry">Other</option>
+            </select>
+            <!-- book condition dropdown -->
+            <select name="condition" required>
+                <option value="">Select condition</option>
+                <option value="New">New</option>
+                <option value="Used">Used</option>
+                <option value="For exchange">For exchange</option>
+                <option value="Free">Free</option>
+            </select>
+            <!-- uploading book image -->            
+            <label>Book Cover Image: <input type="file" name="book_image" accept="image/*"></label>
+            <button type="submit">List Book</button>
+        </form>
+
+        <!-- book listings display -->
+        <h2 class="subheading">📖 Your Listed Books</h2>
+        <div class="book-listings">
+            {% if listings %}
+                {% for book in listings %}
+                    <div class="book-item">
+                        {% if book.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' + book.image_filename) }}" alt="{{ book.title }}">
+                        {% endif %}
+                        <p><strong>{{ book.title }}</strong> by {{ book.author }}</p>
+                        <p><em>{{ book.genre }}</em> | Condition: {{ book.condition }}</p>
+
+                        <!-- delete book listing button -->
+                        <form method="POST" action="{{ url_for('main.delete_listing', listing_id=book.id) }}">
+                            <button type="submit" class="delete-button">Delete Listing</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>You haven't listed any books yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- friend requests section -->
+        <h3 class="subheading">👥 Friend Requests</h3>
+        <div class="friend-requests">
+            {% if friend_requests %}
+                {% for request in friend_requests %}
+                    <div class="friend-request-item">
+                        <div class="friend-request-left">
+                            <p><strong>{{ request.username }}</strong> wants to be friends!</p>
+                            <p class="request-time">{{ request.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                        </div>
+                        <div class="friend-request-actions">
+                            <form method="POST" action="{{ url_for('main.accept_friend_request', request_id=request.id) }}">
+                                <button type="submit" class="btn-accept">Accept</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('main.decline_friend_request', request_id=request.id) }}">
+                                <button type="submit" class="btn-decline">Decline</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No new friend requests.</p>
+            {% endif %}
+        </div>
+
+        <!-- messages section -->
+        <h3 class="subheading">💬 Messages</h3>
+        <div class="messages-container">
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="message-row">
+                        <!--clickable message link to chat page -->
+                        <a href="{{ url_for('main.chat', buyer_id=msg.sender_id, book_id=msg.book_id) }}" class="message-link">
+                            <div class="message-left">
+                                <p><strong>{{ msg.sender_name }}</strong></p>
+                                <p class="message-preview">Regarding: "{{ msg.book_title }}"</p>
+                            </div>
+                            <div class="message-right">
+                                {% if msg.image_filename %}
+                                    <img src="{{ url_for('static', filename='uploads/' + msg.image_filename) }}"
+                                        alt="{{ msg.book_title }}" class="message-book-cover">
+                                {% endif %}
+                            </div>
+                        </a>
+
+                        <!-- delete message button -->
+                        <form method="POST" action="{{ url_for('main.delete_message', message_id=msg.id) }}" onsubmit="return confirm('Delete this message?');">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No messages.</p>
+            {% endif %}
+        </div>
+
+    {% else %}
+    <!-- if user is not logged in -->
+        <h2>Access Denied</h2>
+        <p>You need to <a href="{{ url_for('main.login') }}">log in</a> or <a href="{{ url_for('main.register') }}">register</a> to view your account details.</p>
+    {% endif %}
+</section>
+{% endblock %}

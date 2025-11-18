@@ -1,0 +1,72 @@
+<!-- inherits the base layout (base.html) for consistent structure throughtout the pages -->
+{% extends "base.html" %}
+
+<!-- sets title of the page -->
+{% block title %}User Profile{% endblock %}
+
+
+<!-- additional css for the user profile page -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+<!-- main content block starts here -->
+{% block content %}
+<div class="profile-container">
+    <!-- section for user's profile picture & bio -->
+    <div class="profile-header">
+        <!-- display profile picture if it exists -->
+        {% if user_profile.profile_picture %}
+            <img src="{{ url_for('static', filename='uploads/' ~ user_profile.profile_picture) }}" alt="Profile Picture" class="profile-pic">
+        {% endif %}
+        <!-- display username & bio -->
+        <h2>{{ user_profile.username }}</h2>
+        <p>{{ user_profile.bio }}</p>
+
+        <!-- only show friend interaction buttons if viewing someone else's profile -->
+        {% if session.get('user_id') != user_profile.user_id %}
+        <!-- if already friends then show confirmation -->
+            {% if is_friend %}
+                <p>You are friends ✅</p>
+            <!-- if the current user received a request from this user then show option to decline -->
+            {% elif friend_request_sent %}
+                <form method="POST" action="{{ url_for('main.decline_friend_request', user_id=user_profile.user_id) }}">
+                    <button type="submit" class="btn-decline">Decline Request</button>
+                </form>
+            <!-- if current user already sent a friend request then indicate it's pending -->
+            {% elif request_pending %}
+                <p>Friend request sent ⏳</p>
+            <!-- otherwise allow user to send a new friend request -->
+            {% else %}
+                <form method="POST" action="{{ url_for('main.send_friend_request', user_id=user_profile.user_id) }}">
+                    <button type="submit" class="btn-friend">Send Friend Request</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- section to show the user's listed books -->
+    <div class="user-books">
+        <h3>📚 Books Listed by {{ user_profile.username }}</h3>
+        <!-- if the user has listed books then display them in a grid -->
+        {% if books %}
+            <div class="book-grid">
+                {% for book in books %}
+                    <div class="book-item">
+                        {# show book image if available #}
+                        {% if book.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ book.image_filename) }}" alt="{{ book.title }}">
+                        {% endif %}
+                        <!-- displaying book details -->
+                        <p><strong>{{ book.title }}</strong> by {{ book.author }}</p>
+                        <p><em>{{ book.genre }}</em> | {{ book.condition }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- message if no books have been listed by user -->
+            <p>This user hasn't listed any books yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

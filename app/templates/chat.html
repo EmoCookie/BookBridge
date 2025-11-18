@@ -1,0 +1,41 @@
+<!-- inherits the base layout (base.html) for consistent structure throughtout the pages -->
+{% extends 'base.html' %}
+
+<!-- sets the page title shown in the browser tab -->
+{% block title %}Chat - BookBridge{% endblock %}
+
+<!-- loading additional CSS styles for the chat page -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
+<!-- main content block of the page -->
+{% block content %}
+<div class="chat-container">
+
+    <!-- chat header to display whom you're chatting with & the book title -->
+    <div class="chat-header">
+        <h2>Chat with {{ buyer_name }} about "{{ book_title }}"</h2>
+    </div>
+
+    <!-- area where all chat messages are shown -->
+    <div class="chat-messages">
+        {% for msg in messages %}
+        <!-- dynamically assigns the message class as 'sent' or 'received' 
+        depending on whether the message was sent by the current user -->
+            <div class="message {{ 'sent' if msg.sender_id == current_user_id else 'received' }}">
+                <p>{{ msg.message }}</p>
+                <span class="timestamp">{{ msg.timestamp }}</span>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- form to send a new message in the chat -->
+    <form method="POST" action="{{ url_for('main.send_chat_message') }}" class="chat-form">
+        <input type="hidden" name="receiver_id" value="{{ buyer_id }}">
+        <input type="hidden" name="book_id" value="{{ book_id }}">
+        <textarea name="message" rows="2" placeholder="Enter your message here" required></textarea>
+        <button type="submit">Send</button>
+    </form>
+</div>
+{% endblock %}

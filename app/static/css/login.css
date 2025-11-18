@@ -1,0 +1,72 @@
+/*the css for the login page*/
+.login-container {
+    max-width: 400px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-container h2 {
+    text-align: center;
+    color: #4a7ebb;
+    margin-bottom: 1rem;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container label {
+    margin-top: 1rem;
+    margin-bottom: 0.2rem;
+}
+
+.login-container input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.login-container button {
+    margin-top: 1.5rem;
+    padding: 0.75rem;
+    background: #4a7ebb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.login-container button:hover {
+    background: #3a6ea5;
+}
+
+.flash-messages {
+    list-style: none;
+    padding: 0;
+}
+
+.flash-messages .success {
+    color: green;
+}
+
+.flash-messages .danger {
+    color: red;
+}
+
+h2 {
+    color: #4a7ebb;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ✅ Responsive tweaks */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 1.5rem;
+        margin: 3rem 1rem;
+    }
+}

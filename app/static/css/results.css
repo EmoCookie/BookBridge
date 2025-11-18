@@ -1,0 +1,30 @@
+/*the css for the search results*/
+.results-container {
+    padding: 20px;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f7f7f7;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    flex-wrap: wrap;
+}
+
+.book-details {
+    flex: 1;
+    padding-right: 20px;
+    font-family: 'Times New Roman', serif;
+}
+
+.book-image img {
+    width: 150px;
+    height: auto;
+    border-radius: 4px;
+    object-fit: contain;
+    max-height: 200px;
+}

@@ -1,0 +1,43 @@
+/*the css for the about page*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+body {
+    background-color: #ffffff;
+    color: #000000;
+    font-family: 'Times New Roman', serif;
+    margin: 0;
+    padding: 0;
+}
+
+.about-container {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 2rem;
+}
+
+.about-container h2 {
+    color: #4a7ebb;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 1.5rem;
+}
+
+.about-container p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+h2 {
+    color: #4a7ebb;
+    font-family: 'Poppins', sans-serif;
+}
+
+/*Responsive tweaks */
+@media (max-width: 768px) {
+    .about-container {
+        padding: 1rem;
+    }
+
+    .about-container p {
+        font-size: 1rem;
+    }
+}

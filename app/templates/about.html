@@ -1,0 +1,21 @@
+<!-- inherits the base layout (base.html) for consistent structure throughtout the pages -->
+{% extends 'base.html' %}
+
+<!-- defines the title of this page which will go inside the <title> tag in base.html -->
+{% block title %}About Us - BookBridge{% endblock %}
+
+<!-- adds custom CSS to the about page -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+{% endblock %}
+
+<!-- main content for the About Us page -->
+{% block content %}
+<section class="about-container">
+    <h2>About BookBridge</h2>
+    <p>
+        BookBridge is your go-to platform for sharing the joy of reading. Whether you are looking to sell, donate, or exchange books, our website makes it simple and rewarding.
+        We believe in sustainability and accessibility, making it easier for book lovers and students to connect and support each other. 
+    </p>
+</section>
+{% endblock %}

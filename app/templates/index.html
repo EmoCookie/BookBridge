@@ -1,0 +1,27 @@
+<!-- inherits the base layout (base.html) for consistent structure throughtout the pages -->
+{% extends 'base.html' %}
+
+<!-- sets title of webpage to "BookBridge" -->
+{% block title %}BookBridge{% endblock %}
+
+<!-- includes css styles for the homepage -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+<!-- main content block of the homepage -->
+{% block content %}
+<div class="hero-section">
+    <!-- overlay text that appears on top of the image -->
+    <div class="overlay-text">
+        <h2>Discover and Share Books!</h2>
+        <p>Buy, sell, donate, or exchange your books with ease!</p>
+        <!-- search form that sends a GET request to the search_books route when submitted -->
+        <form action="{{ url_for('main.search_books') }}" method="GET" class="search-form">
+            <input type="text" name="query" placeholder="search now" class="search-box" required>
+            <!-- submit button for the search -->
+            <button type="submit">Search</button>
+        </form>        
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+<!-- inherits the base layout (base.html) for consistent structure throughtout the pages -->
+{% extends 'base.html' %}
+
+<!-- sets title of the page -->
+{% block title %}Register - BookBridge{% endblock %}
+
+
+<!-- adding css file -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+{% endblock %}
+
+<!-- main content block that will be inserted into base.html -->
+{% block content %}
+<section class="register-container">
+    <h2>Create Your Account</h2>
+
+    <!-- display flash messages like validation errors, success messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <!-- registration form using POST method -->
+    <form method="POST">
+        <label>First Name:</label>
+        <input type="text" name="first_name" required>
+
+        <label>Last Name:</label>
+        <input type="text" name="last_name" required>
+
+        <!-- age input field with minimum age of 13 -->
+        <label>Age:</label>
+        <input type="number" name="age" min="13" required>
+
+        <label>Email:</label>
+        <input type="email" name="email" required>
+
+        <label>Password:</label>
+        <input type="password" name="password" required>
+
+        <!-- submit button to create the account -->
+        <button type="submit">Create Account</button>
+    </form>
+</section>
+{% endblock %}

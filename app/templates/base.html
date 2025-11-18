@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- setting character encoding to UTF-8 for broad character support -->
+    <meta charset="UTF-8">
+    <!-- setting the page title. child templates can override this block -->
+    <title>{% block title %}BookBridge{% endblock %}</title>
+    <!-- link to the base css file for global styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <!-- link to the navbar css file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <!-- optional styles block for child templates for additional styles -->
+    {% block styles %}{% endblock %}
+</head>
+<body>
+    <!-- includes the navbar.html -->
+    {% include 'navbar.html' %}
+
+    <!-- main content section that will be replaced by child templates -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

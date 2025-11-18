@@ -1,0 +1,26 @@
+<!-- header section of the page -->
+<header>
+    <!-- website title -->
+    <h1>BookBridge</h1>
+    <nav>
+        <div class="nav-links">
+            <!-- link to home page -->
+            <a href="{{ url_for('main.home') }}">Home</a>
+            <!-- link to logged-in user's account page -->
+            <a href="{{ url_for('main.my_account') }}">My Account</a>
+            <!-- link to communities section -->
+            <a href="{{ url_for('main.communities') }}">Communities</a>
+            <!-- link to the about us page -->
+            <a href="{{ url_for('main.about') }}">About Us</a>
+
+            <!-- shows logout if user is logged in otherwise shows login -->
+            {% if session.get('user') %}
+            <!-- logout link shown when user is logged in -->
+                <a href="{{ url_for('main.logout') }}">Logout</a>
+            {% else %}
+            <!-- login link shown when no user is logged in -->
+                <a href="{{ url_for('main.login') }}">Login</a>
+            {% endif %}
+        </div>
+    </nav>    
+</header>

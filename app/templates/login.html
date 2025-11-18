@@ -1,0 +1,42 @@
+<!-- inherits the base layout (base.html) for consistent structure throughtout the pages -->
+{% extends 'base.html' %}
+
+<!-- sets the page title for the browser tab -->
+{% block title %}Login - BookBridge{% endblock %}
+
+<!-- adding css for styling the login page -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+<!-- main content block of the login page -->
+{% block content %}
+<section class="login-container">
+    <h2>Login to Your Account</h2>
+    <!-- display flashed messages like login success if any exist -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flash-messages">
+          <!-- loop through each flashed message & display it with its category as a CSS class -->
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <!-- login form with email & password fields -->
+    <form method="POST">
+        <label>Email:</label>
+        <input type="email" name="email" required>
+        
+        <label>Password:</label>
+        <input type="password" name="password" required>
+        
+        <button type="submit">Login</button>
+        <!-- link to registration page if user does not have an account -->
+        <p style="margin-top: 1rem; text-align: center;">
+            Don't have an account? <a href="{{ url_for('main.register') }}">Create one</a>
+        </p>        
+    </form>
+</section>
+{% endblock %}

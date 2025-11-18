@@ -1,0 +1,62 @@
+/*the css for the home page*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Times New Roman', serif;
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.hero-section {
+    position: relative;
+    background-image: url("/static/images/books.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay-text {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.overlay-text h2 {
+    font-size: 2.5rem;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 1rem;
+}
+
+.overlay-text p {
+    font-size: 1.3rem;
+}
+
+/* 🔄 Mobile Responsive */
+@media (max-width: 768px) {
+    .overlay-text h2 {
+        font-size: 1.8rem;
+    }
+
+    .overlay-text p {
+        font-size: 1rem;
+    }
+
+    .overlay-text {
+        padding: 1rem;
+        width: 90%;
+    }
+}

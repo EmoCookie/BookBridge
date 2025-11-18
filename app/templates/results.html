@@ -1,0 +1,56 @@
+<!-- inherits the base layout (base.html) for consistent structure throughtout the pages -->
+{% extends 'base.html' %}
+
+<!-- sets the title of the page -->
+{% block title %}Search Results - BookBridge{% endblock %}
+
+<!-- adding css file -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/results.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- main content block for search results page -->
+<section class="results-container">
+    <!--displaying subheading with search query -->
+    <h2 class="subheading">Search Results for "{{ query }}"</h2>
+
+    {% if results %}
+    <!-- loop through each book in search results -->
+        {% for book in results %}
+        <div class="result-item">
+            <!-- display book details -->
+            <div class="book-details">
+                <h3>{{ book.title }}</h3>
+                <p><strong>Author:</strong> {{ book.author }}</p>
+                <p><strong>Genre:</strong> {{ book.genre }}</p>
+                <p><strong>Condition:</strong> {{ book.condition }}</p>
+                <!-- conditionally show seller name if available -->
+                {% if book.seller_name %}
+                <p><strong>Seller:</strong> {{ book.seller_name }}</p>
+                {% endif %}
+            </div>
+            <!-- message form to contact the seller -->
+            <form action="{{ url_for('main.send_message_route') }}" method="POST">
+                <!-- hidden fields to pass receiver (seller) ID & book ID -->
+                <input type="hidden" name="receiver_id" value="{{ book.user_id }}">
+                <input type="hidden" name="book_id" value="{{ book.id }}">
+                <!-- message input textarea -->
+                <textarea name="message" placeholder="Message the seller" required></textarea>
+                <!-- submit button -->
+                <button type="submit">Send</button>
+            </form>   
+            <!-- conditionally show book image if uploaded -->         
+            {% if book.image_filename %}
+            <div class="book-image">
+                <img src="{{ url_for('static', filename='uploads/' + book.image_filename) }}" alt="{{ book.title }}">
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <!-- message shown if no results were found -->
+        <p>No books found.</p>
+    {% endif %}
+</section>
+{% endblock %}

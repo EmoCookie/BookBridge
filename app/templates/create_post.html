@@ -1,0 +1,47 @@
+<!-- inherits the base layout (base.html) for consistent structure throughtout the pages -->
+{% extends "base.html" %}
+
+{% block content %}
+<!-- block that will be inserted into the base template's content block -->
+<div class="create-post-container">
+    <!-- link for css file for styling the create post form -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create_post.css') }}">
+    <!-- heading for post creation page -->
+    <h2>Create a Community Post</h2>
+
+    <!-- form to submit a new community post -->
+    <!-- POST method is used to send form data securely -->
+    <!-- enctype="multipart/form-data" allows file uploads (for images) -->
+    <form action="{{ url_for('main.create_post') }}" method="POST" enctype="multipart/form-data">
+        <!-- input for the post title -->
+        <label for="title">Post Title</label>
+        <input type="text" id="title" name="title" required>
+
+        <!-- textarea for the main content of the post -->
+        <label for="content">Description</label>
+        <textarea id="content" name="content" rows="5" required></textarea>
+
+        <!-- dropdown to select a genre for the post -->
+        <label for="genre">Genre</label> 
+        <select name="genre" id="genre" required>
+            <option value="">-- Select a genre --</option> <!-- default empty option -->
+            <option value="fiction">Fiction</option>
+            <option value="non-fiction">Non-Fiction</option>
+            <option value="mystery">Mystery</option>
+            <option value="romance">Romance</option>
+            <option value="science-fiction">Science Fiction</option>
+            <option value="fantasy">Fantasy</option>
+            <option value="biography">Biography</option>
+            <option value="educational">Educational</option>
+            <option value="other">Other</option>
+        </select>
+
+        <!-- optional image upload field -->
+        <label for="image">Upload an image (optional)</label>
+        <input type="file" id="image" name="image">
+
+        <!-- submit button to post the form -->
+        <button type="submit">Post</button>
+    </form>
+</div>
+{% endblock %}
